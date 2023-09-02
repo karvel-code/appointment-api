@@ -4,11 +4,12 @@ class Appointment < ApplicationRecord
     validates :appointment_type, inclusion: { in: %w(consultation checkup) }
     validates :start_time, presence: true
     validates :doctor_id, presence: true
-    validates :doctor_id, presence: true
+    validates :patient_id, presence: true
 
     # Custom Validations
     validate :within_time_frame
     validate :availability
+    validate :restrict_late_schedule
 
     # Associations
     belongs_to :patient, class_name: 'Patient', foreign_key: 'patient_id'
@@ -16,6 +17,7 @@ class Appointment < ApplicationRecord
 
     # Callbacks
     before_validation :calculate_end_time
+    after_create :send_appointment_email
 
     enum appointment_type: {
         consultation: 'consultation',
@@ -36,9 +38,19 @@ class Appointment < ApplicationRecord
         end
     end
 
+    def restrict_late_schedule
+        if start_time < Time.now
+            errors.add(:base, 'Appointment cannot be scheduled after time has passed')
+        end
+    end
+
     def availability
         if Appointment.where(doctor: doctor, start_time: start_time..end_time).exists?
           errors.add(:base, 'Doctor is not available at this time')
         end
-    end      
+    end
+    
+    def send_appointment_email
+        AppointmentMailer.appointment_email(self).deliver_later
+    end
 end
