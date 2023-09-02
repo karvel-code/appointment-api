@@ -50,5 +50,4 @@ end
 gem 'devise'
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
-gem 'pundit', '~> 1.1'
 
