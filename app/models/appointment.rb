@@ -1,6 +1,6 @@
 class Appointment < ApplicationRecord
+    STATUS = %w[pending complete cancelled].freeze
     # Validations
-    # validates :appointment_type, inclusion: { in: appointment_type.keys }
     validates :appointment_type, inclusion: { in: %w(consultation checkup) }
     validates :start_time, presence: true
     validates :doctor_id, presence: true
@@ -8,7 +8,7 @@ class Appointment < ApplicationRecord
 
     # Custom Validations
     validate :within_time_frame
-    validate :availability
+    validate :availability, on: :create
     validate :restrict_late_schedule
 
     # Associations
