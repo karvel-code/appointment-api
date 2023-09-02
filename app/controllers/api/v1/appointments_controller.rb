@@ -5,6 +5,16 @@ class Api::V1::AppointmentsController < ApplicationController
     end
 
     def create
+        @appointment = Appointment.new(appointment_params)
+        
+        if @appointment.save
+            render json: {
+                status: {code: 200, message: "Appointment Scheduled sucessfully."},
+                data: AppointmentSerializer.new(resource).serializable_hash[:data][:attributes]
+            }, status: :ok
+        else
+            render json: { errors: @appointment.errors.full_messages }, status: :unprocessable_entity
+        end
     end
 
     def updated
