@@ -1,7 +1,9 @@
 class Appointment < ApplicationRecord
     # Validations
-    validates :appointment_type, inclusion: { in: appointment_types.keys }
+    # validates :appointment_type, inclusion: { in: appointment_type.keys }
+    validates :appointment_type, inclusion: { in: %w(consultation checkup) }
     validates :start_time, presence: true
+    validates :doctor_id, presence: true
     validates :doctor_id, presence: true
 
     # Custom Validations
@@ -12,7 +14,7 @@ class Appointment < ApplicationRecord
     belongs_to :doctor, class_name: 'Doctor', foreign_key: 'doctor_id'
 
     # Callbacks
-    before_create :calculate_end_time
+    before_validation :calculate_end_time
 
     enum appointment_type: {
         consultation: 'consultation',
