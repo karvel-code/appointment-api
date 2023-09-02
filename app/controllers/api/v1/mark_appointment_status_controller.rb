@@ -2,8 +2,6 @@ class Api::V1::MarkAppointmentStatusController < ApplicationController
     before_action :authenticate_user!, :set_appointment
 
     def update
-        # binding.irb
-        # authorize @appointment
         if current_user.is_a?(Doctor)
             if @appointment.update(status: mark_appointment_status_params[:status])
                 render json: {
@@ -21,11 +19,10 @@ class Api::V1::MarkAppointmentStatusController < ApplicationController
     private
     
     def set_appointment
-        # @appointment =  Appointment.find(mark_appointment_status_params[:appointment_id])
         @appointment =  Appointment.find(params[:id])
     end
 
     def mark_appointment_status_params
-        params.require(:appointment).permit(:status, :appointment_id)
+        params.require(:appointment).permit(:status)
     end
 end
