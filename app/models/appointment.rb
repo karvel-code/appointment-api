@@ -9,7 +9,7 @@ class Appointment < ApplicationRecord
     # Custom Validations
     validate :within_time_frame
     validate :availability, on: :create
-    # validate :restrict_late_schedule
+    validate :restrict_late_schedule
 
     # Associations
     belongs_to :patient, class_name: 'Patient', foreign_key: 'patient_id'
