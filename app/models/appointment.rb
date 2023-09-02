@@ -1,4 +1,5 @@
 class Appointment < ApplicationRecord
+    STATUS = %w[pending complete cancelled].freeze
     # Validations
     # validates :appointment_type, inclusion: { in: appointment_type.keys }
     validates :appointment_type, inclusion: { in: %w(consultation checkup) }
