@@ -8,6 +8,7 @@ class Appointment < ApplicationRecord
 
     # Custom Validations
     validate :within_time_frame
+    validate :availability
 
     # Associations
     belongs_to :patient, class_name: 'Patient', foreign_key: 'patient_id'
@@ -31,7 +32,13 @@ class Appointment < ApplicationRecord
 
     def within_time_frame
         unless start_time.between?('8:00 AM'.to_time, '5:00 PM'.to_time) && end_time.between?('8:00 AM'.to_time, '5:00 PM'.to_time)
-          errors.add(:start_time, 'Appointment must be scheduled between 8:00 AM and 5:00 PM')
+          errors.add(:base, 'Appointment must be scheduled between 8:00 AM and 5:00 PM')
         end
     end
+
+    def availability
+        if Appointment.where(doctor: doctor, start_time: start_time..end_time).exists?
+          errors.add(:base, 'Doctor is not available at this time')
+        end
+    end      
 end
