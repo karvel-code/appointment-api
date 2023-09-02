@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hello, <%= @patient.email %></h1>
+    <p>
+      Your appointment has been successfully booked!
+    </p>
+
+    <p>
+        Your appointment starts at: <%= @appointment.start_time %> and ends at: <%= @appointment.end_time %>
+    </p>
+
+    <p>Hope to see you soon. Have a great day!</p>
+  </body>
+</html>
