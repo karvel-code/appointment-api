@@ -2,6 +2,17 @@ class Api::V1::AppointmentsController < ApplicationController
     before_action :authenticate_user!
 
     def index
+        if current_user.is_a?(Doctor)
+            @appointments =  Appointment.all
+            @appointments = Appointment.for_selected_date(filter_params[:selected_date]) if filter_params[:selected_date].present?
+            # render json: @appointments, each_serializer: AppointmentSerializer
+            render json: {
+                status: {code: 200, message: "Appointments for the date #{filter_params[:selected_date]}."},
+                data: @appointments
+            }, status: :ok
+        else
+            render json: "Only Doctors can perform this action", status: :forbidden
+        end
     end
 
     def create
@@ -17,14 +28,17 @@ class Api::V1::AppointmentsController < ApplicationController
         end
     end
 
-    def updated
-    end
-
+    def updated; end    
+    
     def destroy; end
 
     private
     
     def appointment_params
-        params.require(:appointment).permit(:appointment_type, :start_time, :doctor_id)
+        params.require(:appointment).permit(:appointment_type, :start_time, :doctor_id, :selected_date)
+    end
+
+    def filter_params
+        params.require(:appointment).permit(:selected_date)
     end
 end

@@ -19,6 +19,11 @@ class Appointment < ApplicationRecord
     before_validation :calculate_end_time
     after_create :send_appointment_email
 
+    # Scopes
+    scope :for_selected_date, ->(selected_date) {
+        where(start_time: selected_date.to_time.beginning_of_day..selected_date.to_time.end_of_day)
+      }
+
     enum appointment_type: {
         consultation: 'consultation',
         checkup: 'checkup',
