@@ -1,15 +1,20 @@
 class Appointment < ApplicationRecord
-    STATUS = %w[pending complete cancelled].freeze
+    STATUS = %w[pending fulfilled missed].freeze
+    APPOINTMENT_TYPE = %w[consultation checkup].freeze
+
     # Validations
-    validates :appointment_type, inclusion: { in: %w(consultation checkup) }
+    validates :appointment_type, inclusion: { in: APPOINTMENT_TYPE }
+    validates :status, inclusion: { in: STATUS }, on: :update
     validates :start_time, presence: true
     validates :doctor_id, presence: true
     validates :patient_id, presence: true
 
     # Custom Validations
-    validate :within_time_frame
-    validate :availability, on: :create
-    validate :restrict_late_schedule
+    with_options if: -> { new_record? } do
+        validate :within_time_frame
+        validate :availability
+        validate :restrict_late_schedule
+    end
 
     # Associations
     belongs_to :patient, class_name: 'Patient', foreign_key: 'patient_id'
@@ -19,10 +24,12 @@ class Appointment < ApplicationRecord
     before_validation :calculate_end_time
     after_create :send_appointment_email
 
-    enum appointment_type: {
-        consultation: 'consultation',
-        checkup: 'checkup',
+    # Scopes
+    scope :for_selected_date, ->(selected_date) {
+        where(start_time: selected_date.to_time.beginning_of_day..selected_date.to_time.end_of_day)
     }
+
+    private
 
     def calculate_end_time
         if appointment_type == "consultation"
