@@ -3,7 +3,7 @@ class Api::V1::AppointmentsController < ApplicationController
 
     def index
         if current_user.is_a?(Doctor)
-            @appointments =  Appointment.all
+            @appointments = Appointment.where(doctor_id: current_user.id)
             @appointments = Appointment.for_selected_date(filter_params[:selected_date]) if filter_params[:selected_date].present?
             # render json: @appointments, each_serializer: AppointmentSerializer
             render json: {
