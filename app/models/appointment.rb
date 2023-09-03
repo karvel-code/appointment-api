@@ -1,7 +1,10 @@
 class Appointment < ApplicationRecord
-    STATUS = %w[pending complete cancelled].freeze
+    STATUS = %w[pending fulfilled missed].freeze
+    APPOINTMENT_TYPE = %w[consultation checkup].freeze
+
     # Validations
-    validates :appointment_type, inclusion: { in: %w(consultation checkup) }
+    validates :appointment_type, inclusion: { in: APPOINTMENT_TYPE }
+    validates :status, inclusion: { in: STATUS }, on: :update
     validates :start_time, presence: true
     validates :doctor_id, presence: true
     validates :patient_id, presence: true
@@ -24,11 +27,6 @@ class Appointment < ApplicationRecord
     # Scopes
     scope :for_selected_date, ->(selected_date) {
         where(start_time: selected_date.to_time.beginning_of_day..selected_date.to_time.end_of_day)
-      }
-
-    enum appointment_type: {
-        consultation: 'consultation',
-        checkup: 'checkup',
     }
 
     private
