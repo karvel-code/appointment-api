@@ -2,7 +2,7 @@ class Api::V1::MarkAppointmentStatusController < ApplicationController
     before_action :authenticate_user!, :set_appointment
 
     def update
-        if current_user.is_a?(Doctor)
+        if current_user.is_a?(Doctor) && @appointment.doctor_id == current_user.id
             if @appointment.update(status: mark_appointment_status_params[:status])
                 render json: {
                     status: {code: 200, message: "Appointment successfully marked as #{mark_appointment_status_params[:status]}."},
