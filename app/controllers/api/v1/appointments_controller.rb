@@ -16,7 +16,6 @@ class Api::V1::AppointmentsController < ApplicationController
     end
 
     def create
-        # binding.irb
         @appointment = Appointment.new(appointment_params.merge(patient_id: current_user.id))
         if @appointment.save
             render json: {
