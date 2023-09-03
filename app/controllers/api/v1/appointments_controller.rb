@@ -3,12 +3,12 @@ class Api::V1::AppointmentsController < ApplicationController
 
     def index
         if current_user.is_a?(Doctor)
-            @appointments = Appointment.where(doctor_id: current_user.id)
-            @appointments = Appointment.for_selected_date(filter_params[:selected_date]) if filter_params[:selected_date].present?
-            # render json: @appointments, each_serializer: AppointmentSerializer
+            appointments = Appointment.where(doctor_id: current_user.id)
+            appointments = Appointment.for_selected_date(filter_params[:selected_date]) if filter_params[:selected_date].present?
+
             render json: {
                 status: {code: 200, message: "Appointments for the date #{filter_params[:selected_date]}."},
-                data: @appointments
+                data: appointments
             }, status: :ok
         else
             render json: "Only Doctors can perform this action", status: :forbidden
@@ -16,8 +16,8 @@ class Api::V1::AppointmentsController < ApplicationController
     end
 
     def create
+        # binding.irb
         @appointment = Appointment.new(appointment_params.merge(patient_id: current_user.id))
-        
         if @appointment.save
             render json: {
                 status: {code: 200, message: "Appointment Scheduled sucessfully."},

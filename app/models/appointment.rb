@@ -7,9 +7,11 @@ class Appointment < ApplicationRecord
     validates :patient_id, presence: true
 
     # Custom Validations
-    validate :within_time_frame
-    validate :availability, on: :create
-    validate :restrict_late_schedule
+    with_options if: -> { new_record? } do
+        validate :within_time_frame
+        validate :availability
+        validate :restrict_late_schedule
+    end
 
     # Associations
     belongs_to :patient, class_name: 'Patient', foreign_key: 'patient_id'
@@ -28,6 +30,8 @@ class Appointment < ApplicationRecord
         consultation: 'consultation',
         checkup: 'checkup',
     }
+
+    private
 
     def calculate_end_time
         if appointment_type == "consultation"
