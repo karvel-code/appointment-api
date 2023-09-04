@@ -1,11 +1,19 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+consultation_appointment:
+  appointment_type: consultation
+  start_time: '2023-09-01 10:00:00'
+  end_time: '2023-09-01 10:20:00'
+  patient_id: 2
+  doctor_id: 1
+  created_at: '2023-09-01 10:00:00'
+  updated_at: '2023-09-01 10:00:00'
+  status: pending
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+checkup_appointment:
+  appointment_type: checkup
+  start_time: '2023-09-02 11:00:00'
+  end_time: '2023-09-02 11:30:00'
+  patient_id: 2
+  doctor_id: 1
+  created_at: '2023-09-02 11:00:00'
+  updated_at: '2023-09-02 11:00:00'
+  status: pending
