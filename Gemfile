@@ -51,3 +51,5 @@ gem 'devise'
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
 
+
+gem "timecop", "~> 0.9.8"

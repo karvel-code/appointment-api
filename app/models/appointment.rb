@@ -46,7 +46,7 @@ class Appointment < ApplicationRecord
     end
 
     def restrict_late_schedule
-        if start_time < Time.now
+        if start_time < Time.zone.now
             errors.add(:base, 'Appointment cannot be scheduled after time has passed')
         end
     end
