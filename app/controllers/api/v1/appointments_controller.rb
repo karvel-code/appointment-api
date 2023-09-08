@@ -4,7 +4,7 @@ class Api::V1::AppointmentsController < ApplicationController
     def index
         if current_user.is_a?(Doctor)
             appointments = Appointment.where(doctor_id: current_user.id)
-            appointments = Appointment.for_selected_date(filter_params[:selected_date]) if filter_params[:selected_date].present?
+            appointments = Appointment.for_selected_date(filter_params[:start_time]) if filter_params[:start_time].present?
 
             render json: {
                 status: {code: 200, message: "Appointments for the date #{filter_params[:selected_date]}."},
@@ -34,10 +34,10 @@ class Api::V1::AppointmentsController < ApplicationController
     private
     
     def appointment_params
-        params.require(:appointment).permit(:appointment_type, :start_time, :doctor_id, :selected_date)
+        params.require(:appointment).permit(:appointment_type, :start_time, :doctor_id)
     end
 
     def filter_params
-        params.require(:appointment).permit(:selected_date)
+        params.require(:appointment).permit(:start_time)
     end
 end

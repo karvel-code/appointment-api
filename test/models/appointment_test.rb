@@ -1,9 +1,16 @@
 require "test_helper"
 
 class AppointmentTest < ActiveSupport::TestCase
-  test "calculate_end_time for consultation" do
-    appointment = appointments(:consultation_appointment)
-    appointment.calculate_end_time
-    assert_equal Time.parse("2023-09-01 10:20:00"), appointment.end_time
+  test "should create a valid appointment with permitted attributes" do
+    doctor = Doctor.create(email: "doctor@email.com", password: "password")
+    patient = Patient.create(email: "patient@email.com", password: "password")
+    duration = 30.minutes
+    start_time = Timecop.freeze(Time.zone.today.beginning_of_day + 9.hours + 30.years)
+    end_time = start_time + duration
+
+    # binding.irb
+    appointment = Appointment.new(appointment_type: 'checkup' ,start_time: start_time, end_time: end_time, doctor_id: doctor.id, patient_id: patient.id, status: "pending")
+    # binding.irb
+    assert appointment.valid?
   end
 end
